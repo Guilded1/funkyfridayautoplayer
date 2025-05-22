@@ -72,7 +72,7 @@ task.spawn(function()
                 if not arrow or arrow.Marked or not getgenv().autoplayer then continue end
                 if arrow.Field ~= framework.VSRG.GameHandler.Field.Side then continue end
                 if not tonumber(arrow.Time) then continue end
-                local accuracymath = math.clamp((1 - math.abs(tonumber(arrow.Time) - threshold)) * 100, 0, 100)
+                local accuracymath = math.clamp((1 - math.abs(tonumber(arrow.Time) - threshold)) * 100, 0, 100) --yes i took this from the original script, im lazy and pretty sure the logic is the same pre-rewrite and post-rewrite
                 if accuracymath >= (getchances() or 96) then
                     arrow.Marked = true
                     local method = getgenv().hitmethod
