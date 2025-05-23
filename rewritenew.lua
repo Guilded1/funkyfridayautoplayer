@@ -32,8 +32,8 @@ task.spawn(function()
             return nil
         end
         getgenv().autoplayer = true
-        getgenv().hitmethod = "vinput"
-        getgenv().hitboxoffset = -23 / 1000
+        getgenv().hitmethod = "firefunc"
+        getgenv().hitboxoffset = 0
         getgenv().framework = nil
         local keyMap = {}
         for _, enum in next, Enum.KeyCode:GetEnumItems() do
@@ -46,17 +46,21 @@ task.spawn(function()
             end
         end
         local framework = getgenv().framework
-        if not framework then warn("framework note found") return end
-        local keybindtbl = {}
-        for i, arrowData in pairs(framework.VSRG.Arrows["4Key"].Arrows) do
-            local dir = tonumber(i) + 1
-            keybindtbl[dir] = keyMap[arrowData.Keybinds.Keyboard[1]]
+        if not framework then warn("framework not found") return end
+        getgenv().keybindtbl = {}
+        getgenv().updatekeybinds = function(sillykey)
+            for i, arrowData in pairs(framework.VSRG.Arrows[sillykey].Arrows) do
+                table.clear(getgenv().keybindtbl)
+                local dir = tonumber(i) + 1
+                getgenv().keybindtbl[dir] = keyMap[arrowData.Keybinds.Keyboard[1]]
+            end
         end
+        getgenv().updatekeybinds("4Key")
         getgenv().presskey = function(method, lane, state)
             if method == "firefunc" then
                 framework.VSRG.GameHandler.Field.HitLane(framework.VSRG.GameHandler.Field, lane, state, nil)
             elseif method == "vinput" then
-                game:GetService("VirtualInputManager"):SendKeyEvent(state, keybindtbl[lane], false, nil)
+                game:GetService("VirtualInputManager"):SendKeyEvent(state, getgenv().keybindtbl[lane], false, nil)
             end
         end
         RunService.RenderStepped:Connect(function()
@@ -68,6 +72,7 @@ task.spawn(function()
             local offset = getgenv().hitboxoffset
             if not pcall(function() return timepos + offset end) then return end
             local threshold = timepos + offset
+            pcall(function() getgenv().updatekeybinds(framework.VSRG.GameHandler.Field.Keys.."Key") end)
             for _, arrow in next, framework.VSRG.GameHandler.Field.Game.Notes do
                 if not arrow or arrow.Marked or not getgenv().autoplayer then continue end
                 if arrow.Field ~= framework.VSRG.GameHandler.Field.Side then continue end
