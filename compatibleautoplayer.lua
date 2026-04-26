@@ -92,30 +92,31 @@ local Mainplayer = AutoGroup:CreateToggle({
 
                 connections[i] = runService.Stepped:Connect(function()
                     for pfse, note in next, notes:GetChildren() do
-                        if not note:IsA("Frame") then return end
+                        if not note:IsA("Frame") then continue end
+                        if Marked[note] then continue end
                         local delay = 0
                         if accuracy < 100 then
                             delay = (math.random(0, (100 - accuracy) * 0.8)) / 1000
                         end
-    
-                        task.delay(delay, function()
-                            if not note.Parent then return end
-                            local offsetPixels = getOffsetPixels()
-                            local trueYcenter = getCenterY(note) + offsetPixels
-                            if math.abs(trueYcenter - splashCenterY) <= timewindow * 1.5 then
-                                inputManager:SendKeyEvent(true, key, false, game)
-                            end
-                        end)
-                        task.spawn(function()
-                            while note.Parent do
-                                local bottom = note.AbsolutePosition.Y + note.AbsoluteSize.Y
-                                if bottom < splashCenterY then
-                                    break
+                        if not note.Parent then return end
+                        local offsetPixels = getOffsetPixels()
+                        local trueYcenter = getCenterY(note) + offsetPixels
+                        task.wait(delay)
+                        if math.abs(trueYcenter - splashCenterY) <= timewindow * 1.5 then
+                            inputManager:SendKeyEvent(true, key, false, game)
+                            Marked[note] = true
+                            task.spawn(function()
+                                while note.Parent do
+                                    local bottom = note.AbsolutePosition.Y + note.AbsoluteSize.Y
+                                    if bottom < splashCenterY then
+                                        break
+                                    end
+                                    task.wait()
                                 end
-                                task.wait()
-                            end
-                            inputManager:SendKeyEvent(false, key, false, game)
-                        end)
+                                inputManager:SendKeyEvent(false, key, false, game)
+                                Marked[note] = nil
+                            end)
+                        end
                     end
                 end)
             end
