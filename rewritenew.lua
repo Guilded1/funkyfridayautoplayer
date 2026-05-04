@@ -74,10 +74,7 @@ task.spawn(function()
             local playback = field.Game.AdjustedPlayback or 1
             for _, arrow in next, field.NoteCache do
                 if not arrow or arrow.Marked or arrow.Field ~= field.Side then continue end
-                local arrowtype = arrow.NoteData and arrow.NoteData.Type
-                if arrowtype == "Poison" or arrowtype == "Death" then 
-                    continue --might do some more, because for now the game is ultimate retard mode and just does not work
-                end
+                if (arrow.NoteData and arrow.NoteData.Type) then continue end
                 local arrowtime = tonumber(arrow.Time)
                 if not arrowtime then continue end
                 local diff = (arrowtime - timepos) / playback
